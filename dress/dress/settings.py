@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dress',
+    'products',
+    'dashboards'
 ]
 
 MIDDLEWARE = [
@@ -123,6 +126,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+BASE_URL="http://127.0.0.1:8000"
 
 
 # Default primary key field type
