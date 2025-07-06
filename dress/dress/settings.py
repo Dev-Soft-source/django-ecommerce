@@ -73,6 +73,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dress.wsgi.application'
 
+AUTH_USER_MODEL = 'dashboards.CustomUser'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
