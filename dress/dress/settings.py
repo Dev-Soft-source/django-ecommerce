@@ -75,6 +75,13 @@ WSGI_APPLICATION = 'dress.wsgi.application'
 
 AUTH_USER_MODEL = 'dashboards.CustomUser'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 

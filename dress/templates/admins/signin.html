@@ -7,15 +7,15 @@
   <title>Login &mdash; SuperCodersStore</title>
 
   <!-- General CSS Files -->
-  <link rel="stylesheet" href="{% static '/modules/bootstrap/css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static '/modules/fontawesome/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static '/dash/modules/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static '/dash/modules/fontawesome/css/all.min.css' %}">
 
   <!-- CSS Libraries -->
-  <link rel="stylesheet" href="{% static '/modules/bootstrap-social/bootstrap-social.css' %}">
+  <link rel="stylesheet" href="{% static '/dash/modules/bootstrap-social/bootstrap-social.css' %}">
 
   <!-- Template CSS -->
-  <link rel="stylesheet" href="{% static '/css/style.css' %}">
-  <link rel="stylesheet" href="{% static '/css/components.css' %}">
+  <link rel="stylesheet" href="{% static '/dash/css/style.css' %}">
+  <link rel="stylesheet" href="{% static '/dash/css/components.css' %}">
 </head>
 
 <body>
@@ -32,7 +32,7 @@
               <div class="card-header"><h4>Login</h4></div>
 
               <div class="card-body">
-                <form method="POST" action="{% url 'admin_login' %}" class="needs-validation" novalidate="">
+                <form method="POST" action="{% url 'admin_login_process' %}" class="needs-validation" novalidate="">
                   {% csrf_token %}
                   <div class="form-group">
                     <label for="email">Username</label>
@@ -97,20 +97,20 @@
   </div>
 
   <!-- General JS Scripts -->
-  <script src="{% static '/modules/jquery.min.js' %}"></script>
-  <script src="{% static '/modules/popper.js' %}"></script>
-  <script src="{% static '/modules/tooltip.js' %}"></script>
-  <script src="{% static '/modules/bootstrap/js/bootstrap.min.js' %}"></script>
-  <script src="{% static '/modules/nicescroll/jquery.nicescroll.min.js' %}"></script>
-  <script src="{% static '/modules/moment.min.js' %}"></script>
-  <script src="{% static '/js/stisla.js' %}"></script>
-  
+  <script src="{% static '/dash/modules/jquery.min.js' %}"></script>
+  <script src="{% static '/dash/modules/popper.js' %}"></script>
+  <script src="{% static '/dash/modules/tooltip.js' %}"></script>
+  <script src="{% static '/dash/modules/bootstrap/js/bootstrap.min.js' %}"></script>
+  <script src="{% static '/dash/modules/nicescroll/jquery.nicescroll.min.js' %}"></script>
+  <script src="{% static '/dash/modules/moment.min.js' %}"></script>
+  <script src="{% static '/dash/js/stisla.js' %}"></script>
+
   <!-- JS Libraies -->
 
   <!-- Page Specific JS File -->
   
   <!-- Template JS File -->
-  <script src="{% static '/js/scripts.js' %}"></script>
-  <script src="{% static '/js/custom.js' %}"></script>
+  <script src="{% static '/dash/js/scripts.js' %}"></script>
+  <script src="{% static '/dash/js/custom.js' %}"></script>
 </body>
 </html>

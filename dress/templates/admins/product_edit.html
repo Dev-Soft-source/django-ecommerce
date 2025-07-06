@@ -1,11 +1,11 @@
-{% extends 'admins/base_template.html' %}
+{% extends 'admin_templates/base_template.html' %}
 {% block title %}
 Product EDIT
 {% endblock title %}
 
 
 {% block custom_css %}
-<link rel="stylesheet" href="//bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css"/>
+<link rel="stylesheet" href="{% static 'dash/modules/bootstrap-tagsinput/dist/admins/' %}"/>
 <style>
 .bootstrap-tagsinput{
 width:100%;

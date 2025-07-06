@@ -1,8 +1,11 @@
 {% load static %}
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
+      <div class="sidebar-brand">
+        <a href="/"><img src="{% static '/dash/img/logo.png' %}" style="height: 85px;" /></a>
+      </div>
       <div class="sidebar-brand sidebar-brand-sm">
-        <a href="/"><img src="{% static '/img/logo.png' %}" style="height: 85px;" /></a>
+        <a href="/"><img src="{% static '/dash/img/logo.png' %}" style="height: 85px;" /></a>
       </div>
       <ul class="sidebar-menu">
         <li class="menu-header">Dashboard</li>
@@ -18,7 +21,6 @@
           </ul>
         </li>
 
-
         {% comment %} SUB CATEGORY MENU {% endcomment %}
         {% url 'sub_category_list' as sub_category_list %}
         {% url 'sub_category_create' as sub_category_create %}
@@ -30,7 +32,6 @@
             <li class='{% if request.path == sub_category_create %} active {% endif %}'><a class="nav-link" href="{% url 'sub_category_create' %}">Add Sub Categories</a></li>
           </ul>
         </li>
-
         
         {% comment %} Merchant User MENU {% endcomment %}
         {% url 'merchant_create' as merchant_create %}
@@ -75,15 +76,17 @@
         <li class="dropdown {% if request.path == product_view %} active {% endif %}  {% if request.path == product_list %} active {% endif %} {% if request.path == product_edit %} active {% endif %}{% if request.path == product_add_media %} active {% endif %}{% if request.path == product_edit_media %} active {% endif %}{% if request.path == product_add_stocks %} active {% endif %}">
           <a href="#" class="nav-link has-dropdown"><i class="fas fa-dice-d6"></i><span>Products</span></a>
           <ul class="dropdown-menu">
-            <li class='{% if request.path == product_view %} active {% endif %}'><a class="nav-link" href="{% url 'product_create' %}">Add Products</a></li>
+            <li class='{% if request.path == product_view %} active {% endif %}'><a class="nav-link" href="{% url 'product_view' %}">Add Products</a></li>
             <li class='{% if request.path == product_list %} active {% endif %} {% if request.path == product_edit %} active {% endif %} {% if request.path == product_add_media %} active {% endif %}{% if request.path == product_edit_media %} active {% endif %}{% if request.path == product_add_stocks %} active {% endif %}'><a class="nav-link" href="{% url 'product_list' %}">Product List</a></li>
           </ul>
         </li>
       </ul>
 
       <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
-        <a href="" class="btn btn-primary btn-lg btn-block btn-icon-split">
+        <a href="{% url 'admin_logout_process' %}" class="btn btn-primary btn-lg btn-block btn-icon-split">
           <i class="fas fa-rocket"></i> LOGOUT
         </a>
-      </div>        </aside>
+      </div>        
+    
+    </aside>
   </div>

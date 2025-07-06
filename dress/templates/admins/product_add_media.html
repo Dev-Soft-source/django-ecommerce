@@ -5,7 +5,7 @@ Product ADD MEDIA
 
 
 {% block custom_css %}
-<link rel="stylesheet" href="//bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css"/>
+<link rel="stylesheet" href="{% static '/dash/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}"/>
 <style>
 .bootstrap-tagsinput{
 width:100%;
@@ -26,7 +26,6 @@ Product ADD MEDIA
                 <div class="card-body">
                     <h5>Product ADD MEDIA #{{ product.id }}</h5>
                 
-
                     <div class="media_div">
                     <div class="row media_div_row first_media">
                         <div class="col-lg-4">
@@ -79,9 +78,7 @@ Product ADD MEDIA
 </div>
 {% endblock page_content %}
 
-
 {% block custom_js %}
-
 <script>
     $(".add_media").click(function(){
         var media_row=$(".first_media").clone();
@@ -97,7 +94,6 @@ Product ADD MEDIA
             $(".media_div").children().last().remove();
         }
     });
-
 
     $(document).on("change",".select_media",function(){
         var media_type=$(this).parents(".media_div_row").find(".media_type").val();
@@ -130,7 +126,6 @@ Product ADD MEDIA
         }
     }
 
-
     $(".submit_btn").click(function(){
         var form=new FormData($("#myform")[0]);
 
@@ -152,9 +147,7 @@ Product ADD MEDIA
                 console.log(percentage);
             }
         });
-
         xhr.send(form);
     })
-
 </script>
 {% endblock custom_js %}

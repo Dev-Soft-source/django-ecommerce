@@ -1,11 +1,12 @@
 {% extends 'admins/base_template.html' %}
+{% load static %}
 {% block title %}
 Product Create
 {% endblock title %}
 
 
 {% block custom_css %}
-<link rel="stylesheet" href="//bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css"/>
+<link rel="stylesheet" href="{% static '/dash/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}"/>
 <style>
 .bootstrap-tagsinput{
 width:100%;
@@ -353,7 +354,7 @@ Product Create
                 console.log(xhr.responseText);
             }
         }
-        xhr.open("POST","{% url 'product_create' %}",true);
+        xhr.open("POST","{% url 'product_view' %}",true);
         $("#progressbar").show();
 
         //UPDATING PROGRESS BAR

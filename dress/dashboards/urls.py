@@ -3,45 +3,48 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.admin_home, name='admin_home'),
+    path('demo/',views.demoPage),
+    path('',views.demoPageTemplate, name="admin_login"),
+    path('admin_login_process/',views.adminLoginProcess,name="admin_login_process"),
+    path('admin_logout_process/',views.adminLogoutProcess,name="admin_logout_process"),
 
-    path('login/', views.admin_login, name='admin_login'),
-    path('logout/', views.admin_logout, name='admin_logout'),    
+    # PAGE FOR ADMIN
+    path('admin_home/', views.admin_home,name="admin_home"),
 
-    path('categories/', views.category_list, name='category_list'),
-    path('categories/create/', views.category_create, name='category_create'),
-    path('categories/<int:pk>/update/', views.category_update, name='category_update'),
-    path('categories/<int:pk>/delete/', views.category_delete, name='category_delete'),
+    #CATEGORIES
+    path('category_list/', views.CategoriesListView.as_view(),name="category_list"),
+    path('category_create/', views.CategoriesCreate.as_view(),name="category_create"),
+    path('category_update/<slug:pk>/', views.CategoriesUpdate.as_view(),name="category_update"),
 
-    path('products/', views.product_list, name='product_list'),
-    path('products/create/', views.product_create, name='product_create'),
-    path('products/<int:pk>/update/', views.product_update, name='product_update'),
-    path('products/<int:pk>/delete/', views.product_delete, name='product_delete'),
+    #SUBCATEGORIES
+    path('sub_category_list/', views.SubCategoriesListView.as_view(),name="sub_category_list"),
+    path('sub_category_create/', views.SubCategoriesCreate.as_view(),name="sub_category_create"),
+    path('sub_category_update/<slug:pk>/', views.SubCategoriesUpdate.as_view(),name="sub_category_update"),
 
-    path('orders/', views.order_list, name='order_list'),
-    path('orders/<int:pk>/update/', views.order_update, name='order_update'),
-    path('orders/<int:pk>/delete/', views.order_delete, name='order_delete'),
+    #Merchant User
+    path('merchant_create/', views.MerchantUserCreateView.as_view(),name="merchant_create"),
+    path('merchant_list/', views.MerchantUserListView.as_view(),name="merchant_list"),
+    path('merchant_update/<slug:pk>/', views.MerchantUserUpdateView.as_view(),name="merchant_update"),
 
-    path('customers/', views.customer_list, name='customer_list'),
-    path('customers/create/', views.customer_create, name='customer_create'),
-    path('customers/<int:pk>/update/', views.customer_update, name='customer_update'),
-    path('customers/<int:pk>/delete/', views.customer_delete, name='customer_delete'),
+    #Products
+    path('product_create/', views.ProductView.as_view(),name="product_view"),
+    path('product_list/', views.ProductListView.as_view(),name="product_list"),
+    path('product_edit/<str:product_id>/', views.ProductEdit.as_view(),name="product_edit"),
+    path('product_add_media/<str:product_id>/', views.ProductAddMedia.as_view(),name="product_add_media"),
+    path('product_edit_media/<str:product_id>/', views.ProductEditMedia.as_view(),name="product_edit_media"),
+    path('product_media_delete/<str:id>/', views.ProductMediaDelete.as_view(),name="product_media_delete"),
+    path('product_add_stocks/<str:product_id>/', views.ProductAddStocks.as_view(),name="product_add_stocks"),
+    path('file_upload/', views.file_upload,name="file_upload"),
 
-    path('sub_categories/', views.sub_category_list, name='sub_category_list'),
-    path('sub_categories/create/', views.sub_category_create, name='sub_category_create'),
-    path('sub_categories/<int:pk>/update/', views.sub_category_update, name='sub_category_update'),
-    path('sub_categories/<int:pk>/delete/', views.sub_category_delete, name='sub_category_delete'),
+    #Staff User
+    path('staff_create/', views.StaffUserCreateView.as_view(),name="staff_create"),
+    path('staff_list/', views.StaffUserListView.as_view(),name="staff_list"),
+    path('staff_update/<slug:pk>/', views.StaffUserUpdateView.as_view(),name="staff_update"),
 
-    path('merchants/', views.merchant_list, name='merchant_list'),
-    path('merchants/create/', views.merchant_create, name='merchant_create'),
-    path('merchants/<int:pk>/update/', views.merchant_update, name='merchant_update'),
-    path('merchants/<int:pk>/delete/', views.merchant_delete, name='merchant_delete'),
+    #Customer User
+    path('customer_create/', views.CustomerUserCreateView.as_view(),name="customer_create"),
+    path('customer_list/', views.CustomerUserListView.as_view(),name="customer_list"),
+    path('customer_update/<slug:pk>/', views.CustomerUserUpdateView.as_view(),name="customer_update"),
 
-    path('staffs/', views.staff_list, name='staff_list'),
-    path('staffs/create/', views.staff_create, name='staff_create'),
-    path('staffs/<int:pk>/update/', views.staff_update, name='staff_update'),
-    path('staffs/<int:pk>/delete/', views.staff_delete, name='staff_delete'),
-
-    path('file_upload/', views.file_upload, name='file_upload'),
 
 ]
