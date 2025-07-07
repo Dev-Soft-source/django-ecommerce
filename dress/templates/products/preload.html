@@ -100,9 +100,9 @@
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="active"><a href="{% url 'product_list' %}">Home</a></li>
-                            <li><a href="{% url 'shop' %}">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li class="{% if home == 'active' %}active{% endif %}"><a href="{% url 'index' %}">Home</a></li>
+                            <li class="{% if shop == 'active' %}active{% endif %}"><a href="{% url 'shop' %}">Shop</a></li>
+                            <li class="{% if pages == 'active' %}active{% endif %}"><a href="#">Pages</a>
                                 <ul class="dropdown">
                                     <li><a href="{% url 'about' %}">About Us</a></li>
                                     <li><a href="{% url 'shop_details' %}">Shop Details</a></li>
@@ -111,8 +111,8 @@
                                     <li><a href="{% url 'blog_details' %}">Blog Details</a></li>
                                 </ul>
                             </li>
-                            <li><a href="{% url 'blog' %}">Blog</a></li>
-                            <li><a href="{% url 'contact' %}">Contacts</a></li>
+                            <li class="{% if blog == 'active' %}active{% endif %}"><a href="{% url 'blog' %}">Blog</a></li>
+                            <li class="{% if contact == 'active' %}active{% endif %}"><a href="{% url 'contact' %}">Contacts</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -130,7 +130,7 @@
     </header>
     <!-- Header Section End -->
 
-    {% block body%} {% endblock %}
+    {% block body%} {% endblock body %}
 
     <!-- Footer Section Begin -->
     <footer class="footer">

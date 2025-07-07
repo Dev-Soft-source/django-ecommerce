@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -11,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 from django.db.models import Q
-from dress.settings import BASE_URL
+from dress.settings import BASE_URL, MEDIA_ROOT, MEDIA_URL
 
 
 # Create your views here.
@@ -213,9 +214,7 @@ class MerchantUserUpdateView(SuccessMessageMixin,UpdateView):
         merchantuser.save()
         messages.success(self.request,"Merchant User Updated")
         return HttpResponseRedirect(reverse("merchant_list"))
-
-        
-
+  
 class ProductView(View):
     def get(self,request,*args,**kwargs):
         categories=Categories.objects.filter(is_active=1)
@@ -253,8 +252,8 @@ class ProductView(View):
 
         i=0
         for media_content in media_content_list:
-            fs=FileSystemStorage()
-            filename=fs.save(media_content.name,media_content)
+            fs = FileSystemStorage(location='media/upload/', base_url='/media/upload/')
+            filename=fs.save(media_content.name, media_content)
             media_url=fs.url(filename)
             product_media=ProductMedia(product_id=product,media_type=media_type_list[i],media_content=media_url)
             product_media.save()
@@ -288,7 +287,6 @@ def file_upload(request):
     file_url=fs.url(filename)
     return HttpResponse('{"location":"'+BASE_URL+''+file_url+'"}')
 
-
 class ProductListView(ListView):
     model=Products
     template_name="admins/product_list.html"
@@ -315,7 +313,6 @@ class ProductListView(ListView):
         context["orderby"]=self.request.GET.get("orderby","id")
         context["all_table_fields"]=Products._meta.get_fields()
         return context
-
 
 class ProductEdit(View):
 
@@ -419,7 +416,10 @@ class ProductAddMedia(View):
         
         i=0
         for media_content in media_content_list:
-            fs=FileSystemStorage()
+            fs = FileSystemStorage(
+                location=MEDIA_ROOT,
+                base_url=MEDIA_URL + 'upload/'
+            )
             filename=fs.save(media_content.name,media_content)
             media_url=fs.url(filename)
             product_media=ProductMedia(product_id=product,media_type=media_type_list[i],media_content=media_url)

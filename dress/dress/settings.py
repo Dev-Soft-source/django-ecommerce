@@ -28,6 +28,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Social Auth
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.microsoft.MicrosoftOAuth2',  # Add this
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = 'home'  # Change as needed
+
+SOCIAL_AUTH_MICROSOFT_OAUTH2_KEY = '<your-client-id>'
+SOCIAL_AUTH_MICROSOFT_OAUTH2_SECRET = '<your-client-secret>'
+SOCIAL_AUTH_MICROSOFT_OAUTH2_SCOPE = ['User.Read']
+SOCIAL_AUTH_MICROSOFT_OAUTH2_EXTRA_DATA = ['id', 'email', 'name']
 
 # Application definition
 
@@ -40,7 +54,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dress',
     'products',
-    'dashboards'
+    'dashboards',
+    'social_django',
+
 ]
 
 MIDDLEWARE = [
@@ -137,6 +153,9 @@ STATIC_URL = 'static/'
 
 BASE_URL="http://127.0.0.1:8000"
 
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
