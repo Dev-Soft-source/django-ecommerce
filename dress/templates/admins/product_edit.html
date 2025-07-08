@@ -1,4 +1,5 @@
-{% extends 'admin_templates/base_template.html' %}
+{% extends 'admins/base_template.html' %}
+{% load static %}
 {% block title %}
 Product EDIT
 {% endblock title %}
@@ -21,7 +22,7 @@ Product EDIT
 <div class="row">
     <div class="col-lg-12">
             <div class="card">
-                <form id="myform">
+                <form id="myform" enctype="multipart/form-data" action="{% url 'product_edit' product.id %}" method="post">
                 {% csrf_token %}
                 <div class="card-body">
                     <h5>Product Basic Details #{{ product.id }}</h5>
@@ -130,20 +131,28 @@ Product EDIT
                     <div class="">
                     {% for about in product_about %}
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <label>Title</label>
                             <input type="text" name="about_title[]" value="{{ about.title }}" class="form-control about_title" placeholder="Title">
                             <input type="hidden" name="about_id[]" value="{{ about.id }}" >
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Details</label>
+                            <input type="text" name="about_details[]" value="{{ about.about_details }}" class="form-control about_details" placeholder="About Details"/>
                         </div>
                     </div>
                     {% endfor %}
                     </div>
                     <div class="about_div">
                     <div class="row about_div_row first_about">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <label>Title</label>
                             <input type="hidden" name="about_id[]" value="blank">
                             <input type="text" name="about_title[]" class="form-control about_title" placeholder="Title">
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Details</label>
+                            <input type="text" name="about_details[]" value="{{ about.about_details }}" class="form-control about_details" placeholder="About Details"/>
                         </div>
                     </div>
                     </div>

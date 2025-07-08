@@ -1,4 +1,5 @@
 {% extends 'admins/base_template.html' %}
+{% load static %}
 {% block title %}
 Customer User List
 {% endblock title %}
@@ -46,7 +47,7 @@ Customer User List
 <div class="col-12 col-sm-6 col-md-6 col-lg-3">
     <article class="article article-style-b">
         <div class="article-header">
-        <div class="article-image" data-background="{{ customeruser.profile_pic }}" style="background-image: url(&quot;dash/img/news/img13.jpg&quot;);">
+        <div class="article-image" data-background="{{ customeruser.profile_pic }}">
         </div>
         <div class="article-badge">
             <div class="article-badge-item bg-danger"><i class="fas fa-fire"></i>{{ customeruser.auth_user_id.username }}</div>

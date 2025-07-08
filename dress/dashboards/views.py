@@ -13,6 +13,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 from django.db.models import Q
 from dress.settings import BASE_URL, MEDIA_ROOT, MEDIA_URL
+import os
+from dress import settings
 
 
 # Create your views here.
@@ -157,7 +159,7 @@ class MerchantUserCreateView(SuccessMessageMixin,CreateView):
 
         #Saving Merchant user
         profile_pic=self.request.FILES["profile_pic"]
-        fs=FileSystemStorage()
+        fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
         filename=fs.save(profile_pic.name,profile_pic)
         profile_pic_url=fs.url(filename)
 
@@ -197,7 +199,7 @@ class MerchantUserUpdateView(SuccessMessageMixin,UpdateView):
         merchantuser=MerchantUser.objects.get(auth_user_id=user.id)
         if self.request.FILES.get("profile_pic",False):
             profile_pic=self.request.FILES["profile_pic"]
-            fs=FileSystemStorage()
+            fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
             filename=fs.save(profile_pic.name,profile_pic)
             profile_pic_url=fs.url(filename)
             merchantuser.profile_pic=profile_pic_url
@@ -242,17 +244,22 @@ class ProductView(View):
         title_title_list=request.POST.getlist("title_title[]")
         title_details_list=request.POST.getlist("title_details[]")
         about_title_list=request.POST.getlist("about_title[]")
+        about_details_list=request.POST.getlist("about_details[]")
         product_tags=request.POST.get("product_tags")
         long_desc=request.POST.get("long_desc")
+        is_active = request.POST.get("is_active")
 
         subcat_obj=SubCategories.objects.get(id=sub_category)
         merchant_user_obj=MerchantUser.objects.get(id=added_by_merchant)
-        product=Products(product_name=product_name,in_stock_total=in_stock_total,url_slug=url_slug,brand=brand,subcategories_id=subcat_obj,product_description=product_description,product_max_price=product_max_price,product_discount_price=product_discount_price,product_long_description=long_desc,added_by_merchant=merchant_user_obj)
+        product=Products(product_name=product_name,in_stock_total=in_stock_total,url_slug=url_slug,
+                         brand=brand,subcategories_id=subcat_obj,product_description=product_description,
+                         product_max_price=product_max_price,product_discount_price=product_discount_price,
+                         product_long_description=long_desc,added_by_merchant=merchant_user_obj,is_active=is_active)
         product.save()
 
         i=0
         for media_content in media_content_list:
-            fs = FileSystemStorage(location='media/upload/', base_url='/media/upload/')
+            fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
             filename=fs.save(media_content.name, media_content)
             media_url=fs.url(filename)
             product_media=ProductMedia(product_id=product,media_type=media_type_list[i],media_content=media_url)
@@ -266,9 +273,10 @@ class ProductView(View):
             j=j+1
 
         for about in about_title_list:
-            product_about=ProductAbout(title=about,product_id=product)
+            product_about=ProductAbout(title=about, about_details=about_details_list[j],product_id=product)
             product_about.save()
-        
+            j=j+1
+
         product_tags_list=product_tags.split(",")
 
         for product_tag in product_tags_list:
@@ -282,7 +290,7 @@ class ProductView(View):
 @csrf_exempt
 def file_upload(request):
     file=request.FILES["file"]
-    fs=FileSystemStorage()
+    fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
     filename=fs.save(file.name,file)
     file_url=fs.url(filename)
     return HttpResponse('{"location":"'+BASE_URL+''+file_url+'"}')
@@ -344,6 +352,7 @@ class ProductEdit(View):
         details_ids=request.POST.getlist("details_id[]")
         title_details_list=request.POST.getlist("title_details[]")
         about_title_list=request.POST.getlist("about_title[]")
+        about_details_list=request.POST.getlist("about_details[]")
         about_ids=request.POST.getlist("about_id[]")
         product_tags=request.POST.get("product_tags")
         long_desc=request.POST.get("long_desc")
@@ -360,7 +369,6 @@ class ProductEdit(View):
         product.product_discount_price=product_discount_price
         product.product_long_description=long_desc
         product.save()
-
         
         j=0
         for title_title in title_title_list:
@@ -376,18 +384,18 @@ class ProductEdit(View):
                     product_details.product_id=product
                     product_details.save()
             j=j+1
-
-
+            
         k=0
         for about in about_title_list:
             about_id=about_ids[k]
             if about_id=="blank" and about!="":
-                product_about=ProductAbout(title=about,product_id=product)
+                product_about=ProductAbout(title=about,about_details=about_details_list[k],product_id=product)
                 product_about.save()
             else:
                 if about!="":
                     product_about=ProductAbout.objects.get(id=about_id)
                     product_about.title=about
+                    product_about.about_details=about_details_list[k]
                     product_about.product_id=product
                     product_about.save()
             k=k+1
@@ -416,10 +424,7 @@ class ProductAddMedia(View):
         
         i=0
         for media_content in media_content_list:
-            fs = FileSystemStorage(
-                location=MEDIA_ROOT,
-                base_url=MEDIA_URL + 'upload/'
-            )
+            fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
             filename=fs.save(media_content.name,media_content)
             media_url=fs.url(filename)
             product_media=ProductMedia(product_id=product,media_type=media_type_list[i],media_content=media_url)
@@ -438,14 +443,12 @@ class ProductEditMedia(View):
 class ProductMediaDelete(View):
     def get(self,request,*args,**kwargs):
         media_id=kwargs["id"]
-        product_media=ProductMedia.objects.get(id=media_id)
-        import os
-        from dress import settings
+        product_media=ProductMedia.objects.get(id=media_id)      
 
-        #It will work too Sometimes
-        #product_media.media_content.delete()
-        os.remove(settings.MEDIA_ROOT.replace("\media","")+str(product_media.media_content).replace("/","\\"))
-        
+        file_path = os.path.join(MEDIA_ROOT, str(product_media.media_content).replace('/', os.sep))
+        # Remove the file if it exists
+        if os.path.exists(file_path):
+            os.remove(file_path)      
         product_id=product_media.product_id.id
         product_media.delete()
         return HttpResponseRedirect(reverse("product_edit_media",kwargs={"product_id":product_id}))
@@ -493,7 +496,6 @@ class StaffUserListView(ListView):
         context["all_table_fields"]=StaffUser._meta.get_fields()
         return context
 
-
 class StaffUserCreateView(SuccessMessageMixin,CreateView):
     template_name="admins/staff_create.html"
     model=CustomUser
@@ -510,7 +512,7 @@ class StaffUserCreateView(SuccessMessageMixin,CreateView):
 
         #Saving Merchant user
         profile_pic=self.request.FILES["profile_pic"]
-        fs=FileSystemStorage()
+        fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
         filename=fs.save(profile_pic.name,profile_pic)
         profile_pic_url=fs.url(filename)
 
@@ -540,7 +542,7 @@ class StaffUserUpdateView(SuccessMessageMixin,UpdateView):
         staffuser=StaffUser.objects.get(auth_user_id=user.id)
         if self.request.FILES.get("profile_pic",False):
             profile_pic=self.request.FILES["profile_pic"]
-            fs=FileSystemStorage()
+            fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
             filename=fs.save(profile_pic.name,profile_pic)
             profile_pic_url=fs.url(filename)
             staffuser.profile_pic=profile_pic_url
@@ -548,7 +550,6 @@ class StaffUserUpdateView(SuccessMessageMixin,UpdateView):
         staffuser.save()
         messages.success(self.request,"Staff User Updated")
         return HttpResponseRedirect(reverse("staff_list"))
-
 
 class CustomerUserListView(ListView):
     model=CustomerUser
@@ -572,7 +573,6 @@ class CustomerUserListView(ListView):
         context["all_table_fields"]=CustomerUser._meta.get_fields()
         return context
 
-
 class CustomerUserCreateView(SuccessMessageMixin,CreateView):
     template_name="admins/customer_create.html"
     model=CustomUser
@@ -589,7 +589,7 @@ class CustomerUserCreateView(SuccessMessageMixin,CreateView):
 
         #Saving Merchant user
         profile_pic=self.request.FILES["profile_pic"]
-        fs=FileSystemStorage()
+        fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
         filename=fs.save(profile_pic.name,profile_pic)
         profile_pic_url=fs.url(filename)
 
@@ -619,7 +619,7 @@ class CustomerUserUpdateView(SuccessMessageMixin,UpdateView):
         customeruser=CustomerUser.objects.get(auth_user_id=user.id)
         if self.request.FILES.get("profile_pic",False):
             profile_pic=self.request.FILES["profile_pic"]
-            fs=FileSystemStorage()
+            fs = FileSystemStorage(location='static/media/upload/', base_url='/static/media/upload/')
             filename=fs.save(profile_pic.name,profile_pic)
             profile_pic_url=fs.url(filename)
             customeruser.profile_pic=profile_pic_url

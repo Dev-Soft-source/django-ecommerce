@@ -1,4 +1,5 @@
 {% extends 'admins/base_template.html' %}
+{% load static %}
 {% block title %}
 Staff User List
 {% endblock title %}
@@ -31,16 +32,15 @@ Staff User List
 <div class="row">
     <div class="col-lg-12">
         <div class="search-element">
-        <div class="card">
-                  
-            <div class="card-body">
-                <b>Sort By : - </b>
-                <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=id">ID</a>  | 
-                <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=created_at">Newest</a> |  
-                <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=auth_user_id__first_name">First Name</a> |
-                <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=auth_user_id__username">Username</a> |
+            <div class="card">                  
+                <div class="card-body">
+                    <b>Sort By : - </b>
+                    <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=id">ID</a>  | 
+                    <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=created_at">Newest</a> |  
+                    <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=auth_user_id__first_name">First Name</a> |
+                    <a href="{% url 'staff_list' %}?filter={{ filter }}&orderby=auth_user_id__username">Username</a> |
+                </div>
             </div>
-        </div>
         </div>
     </div>
 </div>
@@ -49,11 +49,11 @@ Staff User List
 <div class="col-12 col-sm-6 col-md-6 col-lg-3">
     <article class="article article-style-b">
         <div class="article-header">
-        <div class="article-image" data-background="{{ staffuser.profile_pic }}" style="background-image: url(&quot;dash/img/news/img13.jpg&quot;);">
-        </div>
-        <div class="article-badge">
-            <div class="article-badge-item bg-danger"><i class="fas fa-fire"></i>{{ staffuser.auth_user_id.username }}</div>
-        </div>
+            <div class="article-image" data-background="{{ staffuser.profile_pic }}">
+            </div>
+            <div class="article-badge">
+                <div class="article-badge-item bg-danger"><i class="fas fa-fire"></i>{{ staffuser.auth_user_id.username }}</div>
+            </div>
         </div>
         <div class="article-details">
         <p class="no-margin"><span class="badge badge-warning"><i class="fas fa-user-circle"></i> Name : {{ staffuser.auth_user_id.first_name }} {{ staffuser.auth_user_id.last_name }}</span></p>
