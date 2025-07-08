@@ -9,6 +9,43 @@
       </div>
       <ul class="sidebar-menu">
         <li class="menu-header">Dashboard</li>
+
+        {% comment %} PRODUCT SIZE MENU {% endcomment %}
+        {% url 'productsize_list' as productsize_list %}
+        {% url 'productsize_create' as productsize_create %}
+        {% url 'productsize_update' id as productsize_update %}
+        <li class="dropdown {% if request.path == productsize_list %} active {% endif %}{% if request.path == productsize_create %} active {% endif %}{% if request.path == productsize_update %} active {% endif %}">
+          <a href="#" class="nav-link has-dropdown"><i class="fas fa-dice-d6"></i><span>Product Size</span></a>
+          <ul class="dropdown-menu">
+            <li class='{% if request.path == productsize_list %} active {% endif %}'><a class="nav-link" href="{% url 'productsize_list' %}">All Product Sizes</a></li>
+            <li class='{% if request.path == productsize_create %} active {% endif %}'><a class="nav-link" href="{% url 'productsize_create' %}">Add Product Size</a></li>
+          </ul>
+        </li>
+
+        {% comment %} PRODUCT COLOR MENU {% endcomment %}
+        {% url 'productcolor_list' as productcolor_list %}
+        {% url 'productcolor_create' as productcolor_create %}
+        {% url 'productcolor_update' id as productcolor_update %}
+        <li class="dropdown {% if request.path == productcolor_list %} active {% endif %}{% if request.path == productcolor_create %} active {% endif %}{% if request.path == productcolor_update %} active {% endif %}">
+          <a href="#" class="nav-link has-dropdown"><i class="fas fa-dice-d6"></i><span>Product Color</span></a>
+          <ul class="dropdown-menu">
+            <li class='{% if request.path == productcolor_list %} active {% endif %}'><a class="nav-link" href="{% url 'productcolor_list' %}">All Product Colors</a></li>
+            <li class='{% if request.path == productcolor_create %} active {% endif %}'><a class="nav-link" href="{% url 'productcolor_create' %}">Add Product Color</a></li>
+          </ul>
+        </li>
+
+        {% comment %} BADGE MENU {% endcomment %}
+        {% url 'badge_list' as badge_list %}
+        {% url 'badge_create' as badge_create %}
+        {% url 'badge_update' id as badge_update %}
+        <li class="dropdown {% if request.path == badge_list %} active {% endif %}{% if request.path == badge_create %} active {% endif %}{% if request.path == badge_update %} active {% endif %}">
+          <a href="#" class="nav-link has-dropdown"><i class="fas fa-dice-d6"></i><span>Badge</span></a>
+          <ul class="dropdown-menu">
+            <li class='{% if request.path == badge_list %} active {% endif %}'><a class="nav-link" href="{% url 'badge_list' %}">All Badges</a></li>
+            <li class='{% if request.path == badge_create %} active {% endif %}'><a class="nav-link" href="{% url 'badge_create' %}">Add Badge</a></li>
+          </ul>
+        </li>
+
         {% comment %} CATEGORY MENU {% endcomment %}
         {% url 'category_list' as category_list %}
         {% url 'category_create' as category_create %}

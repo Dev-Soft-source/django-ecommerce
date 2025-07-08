@@ -11,10 +11,29 @@ urlpatterns = [
     # PAGE FOR ADMIN
     path('admin_home/', views.admin_home,name="admin_home"),
 
+    #PRODUCT COLORS
+    path('productcolor_list/', views.ProductColorsListView.as_view(),name="productcolor_list"),
+    path('productcolor_create/', views.ProductColorsCreate.as_view(),name="productcolor_create"),
+    path('productcolor_update/<slug:pk>/', views.ProductColorsUpdate.as_view(),name="productcolor_update"),
+    path('productcolor_delete/<slug:pk>/', views.ProductColorsDelete.as_view(),name="productcolor_delete"),
+
+    #PRODUCT SIZES
+    path('productsize_list/', views.ProductSizesListView.as_view(),name="productsize_list"),
+    path('productsize_create/', views.ProductSizesCreate.as_view(),name="productsize_create"),
+    path('productsize_update/<slug:pk>/', views.ProductSizesUpdate.as_view(),name="productsize_update"),
+    path('productsize_delete/<slug:pk>/', views.ProductSizesDelete.as_view(),name="productsize_delete"),
+
+    #BADGES
+    path('badge_list/', views.BadgesListView.as_view(),name="badge_list"),
+    path('badge_create/', views.BadgesCreate.as_view(),name="badge_create"),
+    path('badge_update/<slug:pk>/', views.BadgesUpdate.as_view(),name="badge_update"),
+    path('badge_delete/<slug:pk>/', views.BadgesDelete.as_view(),name="badge_delete"),
+
     #CATEGORIES
     path('category_list/', views.CategoriesListView.as_view(),name="category_list"),
     path('category_create/', views.CategoriesCreate.as_view(),name="category_create"),
     path('category_update/<slug:pk>/', views.CategoriesUpdate.as_view(),name="category_update"),
+    path('category/delete/<int:pk>/', views.CategoriesDelete.as_view(), name='category_delete'),
 
     #SUBCATEGORIES
     path('sub_category_list/', views.SubCategoriesListView.as_view(),name="sub_category_list"),

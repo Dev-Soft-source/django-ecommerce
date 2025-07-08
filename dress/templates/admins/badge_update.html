@@ -1,7 +1,7 @@
 {% extends 'admins/base_template.html' %}
 {% load static %}
 {% block title %}
-Category Update
+Badge Update
 {% endblock title %}
 
 
@@ -9,7 +9,7 @@ Category Update
 {% endblock custom_css %}
 
 {% block page_title %}
-Category Update
+Badge Update
 {% endblock page_title %}
 
 {% block page_content %}
@@ -18,7 +18,7 @@ Category Update
     <div class="col-12 col-md-12 col-lg-12">
         <div class="card">
             <div class="card-header">
-            <h4>Categories</h4>
+            <h4>Badge Update</h4>
             </div>
             <div class="card-body">
             <form method="post" enctype="multipart/form-data">
@@ -32,19 +32,9 @@ Category Update
                             {{ field.errors }}
                         </div>
                         {% endif %}
-                    </div>
-                    {% if field.field.widget.input_type == "file" %}
-                    <div class="form-group">
-                        <label>Current {{ field.label }}</label><br>
-                        <div class="card">
-                            <div class="card-body">
-                                <img src="/static/media/{{ field.value }}" style="height:250px"/>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
+                    </div>                    
                 {% endfor %}
-                <button type="submit" class="btn btn-primary btn-block">SAVE CATEGORY</button>
+                <button type="submit" class="btn btn-primary btn-block">SAVE BADGE</button>
             </form>
         </div>
     </div>

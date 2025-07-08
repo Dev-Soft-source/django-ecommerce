@@ -7,8 +7,6 @@ from dashboards.models import CustomerUser, MerchantUser
 class Categories(models.Model):
     id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=255)
-    url_slug=models.CharField(max_length=255)
-    description=models.TextField()
     created_at=models.DateTimeField(auto_now_add=True)
     is_active=models.IntegerField(default=1)
 

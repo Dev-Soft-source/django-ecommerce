@@ -1,15 +1,16 @@
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, View
 from products.models import Categories, SubCategories, ProductAbout, ProductDetails, ProductMedia, ProductTransaction, ProductTags, Products
-from .models import CustomUser, MerchantUser, StaffUser, CustomerUser
+from .models import CustomUser, MerchantUser, StaffUser, CustomerUser, ProductColors, ProductSizes, Badges
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
 from django.contrib.messages.views import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate,login,logout
+from django.views.decorators.http import require_POST
 from django.urls import reverse
 from django.db.models import Q
 from dress.settings import BASE_URL, MEDIA_ROOT, MEDIA_URL
@@ -49,6 +50,129 @@ def adminLogoutProcess(request):
 def admin_home(request):
     return render(request,"admins/home.html")
 
+class ProductColorsListView(ListView):
+    model=ProductColors
+    template_name="admins/product_color_list.html"
+    paginate_by=3
+
+    def get_queryset(self):
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            cat=ProductColors.objects.filter(Q(color_name__contains=filter_val) | Q(color_code__contains=filter_val)).order_by(order_by)
+        else:
+            cat=ProductColors.objects.all().order_by(order_by)
+
+        return cat
+
+    def get_context_data(self,**kwargs):
+        context=super(ProductColorsListView,self).get_context_data(**kwargs)
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["all_table_fields"]=ProductColors._meta.get_fields()
+        return context
+
+class ProductColorsCreate(SuccessMessageMixin,CreateView):
+    model=ProductColors
+    success_message="Product Color Added!"
+    fields="__all__"
+    template_name="admins/product_color_create.html"
+
+class ProductColorsUpdate(SuccessMessageMixin,UpdateView):
+    model=ProductColors
+    success_message="Product Color Updated!"
+    fields="__all__"
+    template_name="admins/product_color_update.html"
+
+class ProductColorsDelete(View):
+    def get(self,request,*args,**kwargs):
+        _id=kwargs["pk"]
+        category=ProductColors.objects.get(id=_id)   
+        category.delete()
+        return HttpResponseRedirect(reverse("productcolor_list"))
+
+class ProductSizesListView(ListView):
+    model=ProductSizes
+    template_name="admins/product_size_list.html"
+    paginate_by=3
+
+    def get_queryset(self):
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            cat=ProductSizes.objects.filter(Q(size_name__contains=filter_val)).order_by(order_by)
+        else:
+            cat=ProductSizes.objects.all().order_by(order_by)
+
+        return cat
+
+    def get_context_data(self,**kwargs):
+        context=super(ProductSizesListView,self).get_context_data(**kwargs)
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["all_table_fields"]=ProductSizes._meta.get_fields()
+        return context
+
+class ProductSizesCreate(SuccessMessageMixin,CreateView):
+    model=ProductSizes
+    success_message="Product Size Added!"
+    fields="__all__"
+    template_name="admins/product_size_create.html"
+
+class ProductSizesUpdate(SuccessMessageMixin,UpdateView):
+    model=ProductSizes
+    success_message="Product Size Updated!"
+    fields="__all__"
+    template_name="admins/product_size_update.html"
+
+class ProductSizesDelete(View):
+    def get(self,request,*args,**kwargs):
+        _id=kwargs["pk"]
+        category=ProductSizes.objects.get(id=_id)   
+        category.delete()
+        return HttpResponseRedirect(reverse("productsize_list"))
+
+class BadgesListView(ListView):
+    model=Badges
+    template_name="admins/badge_list.html"
+    paginate_by=3
+
+    def get_queryset(self):
+        filter_val=self.request.GET.get("filter","")
+        order_by=self.request.GET.get("orderby","id")
+        if filter_val!="":
+            cat=Badges.objects.filter(Q(title__contains=filter_val)).order_by(order_by)
+        else:
+            cat=Badges.objects.all().order_by(order_by)
+
+        return cat
+
+    def get_context_data(self,**kwargs):
+        context=super(BadgesListView,self).get_context_data(**kwargs)
+        context["filter"]=self.request.GET.get("filter","")
+        context["orderby"]=self.request.GET.get("orderby","id")
+        context["all_table_fields"]=Badges._meta.get_fields()
+        return context
+
+class BadgesCreate(SuccessMessageMixin,CreateView):
+    model=Badges
+    success_message="Badge Added!"
+    fields="__all__"
+    template_name="admins/badge_create.html"    
+
+class BadgesUpdate(SuccessMessageMixin,UpdateView):
+    model=Badges
+    success_message="Badge Updated!"
+    fields="__all__"
+    template_name="admins/badge_update.html"
+
+class BadgesDelete(View):
+    def get(self,request,*args,**kwargs):
+        _id=kwargs["pk"]
+        category=Badges.objects.get(id=_id)   
+        category.delete()
+        return HttpResponseRedirect(reverse("badge_list"))
+
 class CategoriesListView(ListView):
     model=Categories
     template_name="admins/category_list.html"
@@ -58,7 +182,7 @@ class CategoriesListView(ListView):
         filter_val=self.request.GET.get("filter","")
         order_by=self.request.GET.get("orderby","id")
         if filter_val!="":
-            cat=Categories.objects.filter(Q(title__contains=filter_val) | Q(description__contains=filter_val)).order_by(order_by)
+            cat=Categories.objects.filter(Q(title__contains=filter_val)).order_by(order_by)
         else:
             cat=Categories.objects.all().order_by(order_by)
 
@@ -71,7 +195,6 @@ class CategoriesListView(ListView):
         context["all_table_fields"]=Categories._meta.get_fields()
         return context
 
-
 class CategoriesCreate(SuccessMessageMixin,CreateView):
     model=Categories
     success_message="Category Added!"
@@ -83,6 +206,13 @@ class CategoriesUpdate(SuccessMessageMixin,UpdateView):
     success_message="Category Updated!"
     fields="__all__"
     template_name="admins/category_update.html"
+
+class CategoriesDelete(View):
+    def get(self,request,*args,**kwargs):
+        _id=kwargs["pk"]
+        category=Categories.objects.get(id=_id)   
+        category.delete()
+        return HttpResponseRedirect(reverse("category_list"))
 
 
 class SubCategoriesListView(ListView):
@@ -384,7 +514,7 @@ class ProductEdit(View):
                     product_details.product_id=product
                     product_details.save()
             j=j+1
-            
+
         k=0
         for about in about_title_list:
             about_id=about_ids[k]
