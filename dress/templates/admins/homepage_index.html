@@ -1,0 +1,476 @@
+{% extends 'admins/base_template.html' %}
+{% load static %}
+{% block title %}
+Homepage
+{% endblock title %}
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static '/dash/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}"/>
+<style>
+.bootstrap-tagsinput{
+width:100%;
+}
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}
+Homepage
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <form id="myform">
+                {% csrf_token %}
+                <div class="card-body">
+                    <br>
+                    <h5>Homepage Interface(1,2,3,~)</h5>
+                    <hr style="border: 1px solid #8b3987;">
+                    <div class="interface_media_div">
+                        <div class="interface_media_div_row first_media">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>small Title</label>
+                                    <input class="form-control" name="interface_small_title" placeholder="summer collection" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Title</label>
+                                    <input class="form-control" name="interface_title" id="interface_title" placeholder="Fall - Winter Collection ..."  />
+                                </div>                            
+                            </div>
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <label>Product Description</label>
+                                    <textarea class="form-control" name="Product_description" id="Product_description"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <label>Media Type</label>
+                                    <select name="media_type[]" class="form-control media_type">
+                                        <option value="1">Image</option>
+                                        <option value="2">Video</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Select Media</label>
+                                    <input type="file" name="configure_media_content[]" class="form-control select_media" />
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Preview</label>
+                                    <br>
+                                    <img style="width:70%;display:none" class="img_preview">
+                                    <br>
+                                    <video style="width:70%;display:none" class="video_preview" controls>
+                                </div>
+                            </div>
+                            <hr style="border: 1px solid #62a89d;">
+                        </div>                        
+                    </div>                    
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button class="btn btn-success btn-block add_interface_media" type="button">ADD IMAGE</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-danger btn-block remove_interface_media" type="button">REMOVE IMAGE</button>
+                        </div>
+                    </div>
+
+                    <br> 
+                    <h5>Collection media(3)</h5>
+                    <hr style="border: 1px solid #8b3987;">
+                    <div class="collection_media_div">
+                        <div class="collection_media_div_row second_media">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label>Collection Title</label>
+                                    <input class="form-control" name="collection_title" id="collection_title" placeholder="Clothing Collections 2030"  />
+                                </div>                            
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <label>Media Type</label>
+                                    <select name="media_type[]" class="form-control media_type">
+                                        <option value="1">Image</option>
+                                        <option value="2">Video</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Select Media</label>
+                                    <input type="file" name="collection_content[]" class="form-control select_collection_media" />
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Preview</label>
+                                    <br>
+                                    <img style="width:70%;display:none" class="img_preview">
+                                    <br>
+                                    <video style="width:70%;display:none" class="video_preview" controls>
+                                </div>
+                            </div>
+                            <hr style="border: 1px solid #62a89d;">
+                        </div>
+                    </div>                    
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button class="btn btn-success btn-block add_collection_media" type="button">ADD COLLECTION IMAGE</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-danger btn-block remove_collection_media" type="button">REMOVE COLLECTION IMAGE</button>
+                        </div>
+                    </div>
+
+                    <br> 
+                    <h5>Best Sellers(4,8,~)</h5>
+                    <hr style="border: 1px solid #8b3987;">
+                    <div class="best_div">
+                        <div class="row best_div_row third_best">
+                            <div class="col-lg-6">
+                                <label>Category</label>
+                                <select name="best_category[]" class="form-control select_best_category">
+                                    {% for category in categories %}
+                                        <optgroup  label="{{ category.category.title }}">
+                                            {% for sub_cat in category.sub_category %}
+                                                <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button class="btn btn-success btn-block add_best" type="button">ADD Best Seller Category</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-danger btn-block remove_best" type="button">REMOVE Best Seller Category</button>
+                        </div>
+                    </div>
+
+                    <br> 
+                    <h5>New Arrivals(4,8,~)</h5>
+                    <hr style="border: 1px solid #8b3987;">
+                    <div class="new_div">
+                        <div class="row new_div_row first_new">
+                            <div class="col-lg-6">
+                                <label>Category</label>
+                                <select name="new_category[]" class="form-control select_new_category">
+                                    {% for category in categories %}
+                                        <optgroup  label="{{ category.category.title }}">
+                                            {% for sub_cat in category.sub_category %}
+                                                <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>                    
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button class="btn btn-success btn-block add_new" type="button">ADD New Arrival Category</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-danger btn-block remove_new" type="button">REMOVE New Arrival Category</button>
+                        </div>
+                    </div>
+
+                    <br> 
+                    <h5>Hot Sales(4,8,~)</h5>
+                    <hr style="border: 1px solid #8b3987;">
+                    <div class="hot_div">
+                        <div class="row hot_div_row first_hot">
+                            <div class="col-lg-6">
+                                <label>Category</label>
+                                <select name="hot_category[]" class="form-control select_hot_category">
+                                    {% for category in categories %}
+                                        <optgroup  label="{{ category.category.title }}">
+                                            {% for sub_cat in category.sub_category %}
+                                                <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>                    
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button class="btn btn-success btn-block add_hot" type="button">ADD Hot Sales Category</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-danger btn-block remove_hot" type="button">REMOVE Hot Sales Category</button>
+                        </div>
+                    </div>
+
+                    <br> 
+                    <h5>Instagram</h5>
+                    <hr style="border: 1px solid #8b3987;">
+                    <div class="row"> 
+                        <div class="col-lg-12">
+                            <label>Instagram Description</label>
+                            <textarea class="form-control" name="instagram_description" id="instagram_desc"></textarea>
+                        </div>
+                    </div>
+                    <div class="instagram_div">
+
+                    </div>
+                    <div class="row instagram_div_row first_instagram">
+                        <div class="col-lg-6">
+                            <label>Category</label>
+                            <select name="instagram_category[]" class="form-control select_instagram_category">
+                                {% for category in categories %}
+                                    <optgroup  label="{{ category.category.title }}">
+                                        {% for sub_cat in category.sub_category %}
+                                            <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <button class="btn btn-success btn-block add_instagram" type="button">ADD Instagram Image</button>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-danger btn-block remove_instagram" type="button">REMOVE Instagram Image</button>
+                        </div>
+                    </div>
+
+                    <br> 
+                    <hr>
+                    <div class="row">
+                        <button type="button" class="btn btn-primary btn-block submit_btn">Configuration</button>
+                    </div>                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}
+
+
+{% block custom_js %}
+<script src="//cdn.tiny.cloud/1/u6oa5pnpaa1vxho1md7uk4zmq2ai7xuf5o5wfgyrc131vpj6/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+  tinymce.init({
+        selector: "textarea#long_desc",
+        height: 300,
+        plugins: [
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
+            "save table contextmenu directionality emoticons template paste textcolor",
+        ],
+        images_upload_url:"{% url 'file_upload' %}",
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+        style_formats: [
+            { title: "Bold text", inline: "b" },
+            { title: "Red text", inline: "span", styles: { color: "#ff0000" } },
+            { title: "Red header", block: "h1", styles: { color: "#ff0000" } },
+            { title: "Example 1", inline: "span", classes: "example1" },
+            { title: "Example 2", inline: "span", classes: "example2" },
+            { title: "Table styles" },
+            { title: "Table row 1", selector: "tr", classes: "tablerow1" },
+        ],
+        automatic_uploads: true,
+        file_picker_types: 'image',
+        file_picker_callback: function (cb, value, meta) {
+        var input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+
+        /*
+        Note: In modern browsers input[type="file"] is functional without
+        even adding it to the DOM, but that might not be the case in some older
+        or quirky browsers like IE, so you might want to add it to the DOM
+        just in case, and visually hide it. And do not forget do remove it
+        once you do not need it anymore.
+        */
+
+        input.onchange = function () {
+        var file = this.files[0];
+
+        var reader = new FileReader();
+        reader.onload = function () {
+            /*
+            Note: Now we need to register the blob in TinyMCEs image blob
+            registry. In the next release this part hopefully won't be
+            necessary, as we are looking to handle it internally.
+            */
+            var id = 'blobid' + (new Date()).getTime();
+            var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+            var base64 = reader.result.split(',')[1];
+            var blobInfo = blobCache.create(id, file, base64);
+            blobCache.add(blobInfo);
+
+            /* call the callback and populate the Title field with the file name */
+            cb(blobInfo.blobUri(), { title: file.name });
+        };
+        reader.readAsDataURL(file);
+        };
+
+        input.click();
+    },
+});
+</script>
+<script>
+    $(".add_interface_media").click(function(){
+        var media_row=$(".first_media").clone();
+        media_row.removeClass("first_media");
+        media_row.replaceAll("src","")
+        media_row.find(".select_media").val("");
+        media_row.find(".img_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+        media_row.find(".video_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+        $(".interface_media_div").append(media_row);
+    });
+    $(".remove_interface_media").click(function(){
+        if($(".interface_media_div").find(".interface_media_div_row").length>1){
+            $(".interface_media_div").children().last().remove();
+        }
+    });
+
+    $(".add_collection_media").click(function(){
+        var media_row=$(".second_media").clone();
+        media_row.removeClass("second_media");
+        media_row.replaceAll("src","")
+        media_row.find(".select_collection_media").val("");
+        media_row.find(".img_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+        media_row.find(".video_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+        $(".collection_media_div").append(media_row);
+    });
+    $(".remove_collection_media").click(function(){
+        if($(".collection_media_div").find(".collection_media_div_row").length>1){
+            $(".collection_media_div").children().last().remove();
+        }
+    });
+
+    $(".add_best").click(function(){
+        var media_row=$(".third_best").clone();
+        media_row.removeClass("third_best");
+        media_row.replaceAll("src","")
+        media_row.find(".select_best_category").val("");
+        $(".best_div").append(media_row);
+    });
+    $(".remove_best").click(function(){
+        if($(".best_div").find(".best_div_row").length>1){
+            $(".best_div").children().last().remove();
+        }
+    });
+
+    $(".add_new").click(function(){
+        var media_row=$(".first_new").clone();
+        media_row.removeClass("first_new");
+        media_row.replaceAll("src","")
+        media_row.find(".select_new_category").val("");
+        $(".new_div").append(media_row);
+    });
+    $(".remove_new").click(function(){
+        if($(".new_div").find(".new_div_row").length>1){
+            $(".new_div").children().last().remove();
+        }
+    });
+
+    $(".add_hot").click(function(){
+        var media_row=$(".first_hot").clone();
+        media_row.removeClass("first_hot");
+        media_row.replaceAll("src","")
+        media_row.find(".select_hot_category").val("");
+        $(".hot_div").append(media_row);
+    });
+    $(".remove_hot").click(function(){
+        if($(".hot_div").find(".hot_div_row").length>1){
+            $(".hot_div").children().last().remove();
+        }
+    });
+
+    $(".add_instagram").click(function(){
+        var media_row=$(".first_instagram").clone();
+        media_row.removeClass("first_instagram");
+        media_row.replaceAll("src","")
+        media_row.find(".select_instagram_category").val("");
+        $(".instagram_div").append(media_row);
+    });
+    $(".remove_instagram").click(function(){
+        if($(".instagram_div").find(".instagram_div_row").length>1){
+            $(".instagram_div").children().last().remove();
+        }
+    });
+
+    $(document).on("change",".select_media",function(){
+        var media_type=$(this).parents(".interface_media_div_row").find(".media_type").val();
+        var img_preview=$(this).parents(".interface_media_div_row").find(".img_preview");
+        var vid_preview=$(this).parents(".interface_media_div_row").find(".video_preview");
+        showPreviewMedia(this,media_type,img_preview,vid_preview);
+    });
+
+    $(document).on("change",".select_collection_media",function(){
+        var media_type=$(this).parents(".collection_media_div_row").find(".media_type").val();
+        var img_preview=$(this).parents(".collection_media_div_row").find(".img_preview");
+        var vid_preview=$(this).parents(".collection_media_div_row").find(".video_preview");
+        showPreviewMedia(this,media_type,img_preview,vid_preview);
+    });
+
+    function showPreviewMedia(input,media_type,img_preview,video_preview){
+        if(input.files && input.files[0]){
+            var reader=new FileReader();
+            reader.onload=function(e){
+                if(media_type=="1"){
+                    img_preview.attr("src",e.target.result);
+                    img_preview.show();
+                    img_preview.css({"border":"5px solid orange"});
+                    img_preview.css({"border-radius":"10px"});
+                }
+                if(media_type=="2"){
+                    video_preview.show();
+                    video_preview.css({"border":"5px solid orange"});
+                    video_preview.css({"border-radius":"10px"});
+                    video_preview.attr("src",e.target.result);
+                    video_preview.load();
+                    video_preview.play();
+
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+    $(".submit_btn").click(function(){
+        var form=new FormData($("#myform")[0]);
+        form.append("long_desc",tinyMCE.activeEditor.getContent());
+
+        //AJAX CODE
+        var xhr=new XMLHttpRequest();
+        xhr.onreadystatechange=function(){
+            if(xhr.status==200){
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.open("POST","{% url 'product_view' %}",true);
+        $("#progressbar").show();
+
+        //UPDATING PROGRESS BAR
+        xhr.upload.addEventListener("progress",function(ev){
+            if(ev.lengthComputable){
+                var percentage=(ev.loaded/ev.total*100|0);
+                $("#progressbar").css({"width":""+percentage+"%"}).text("Uploading .."+percentage+"%");
+                console.log(percentage);
+            }
+        });
+
+        xhr.send(form);
+    })
+
+</script>
+<script src="//bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+{% endblock custom_js %}

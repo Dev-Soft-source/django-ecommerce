@@ -34,7 +34,20 @@ class MerchantUser(models.Model):
 
 class CustomerUser(models.Model):
     auth_user_id=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    profile_pic=models.FileField(default="")
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+ #   city = models.CharField(max_length=50, blank=True)
+ #   country = models.CharField(max_length=50, blank=True)
+    is_blocked = models.BooleanField(default=False)
+ #   customer_type = models.CharField(
+ #       max_length=20,
+ #       choices=[('Retail', 'Retail'), ('Wholesale', 'Wholesale'), ('VIP', 'VIP')],
+ #       default='Retail'
+ #   )
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.user.get_full_name() or self.user.username
     created_at=models.DateTimeField(auto_now_add=True)
 
 class Badges(models.Model):

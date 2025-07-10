@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, View
-from products.models import Categories, SubCategories, ProductAbout, ProductDetails, ProductMedia, ProductTransaction, ProductTags, Products
+from products.models import Categories, SubCategories, ProductAbout, ProductDetails, ProductMedia, ProductTransaction, ProductTags, Products, ProductVarient
 from .models import CustomUser, MerchantUser, StaffUser, CustomerUser, ProductColors, ProductSizes, Badges
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
@@ -50,6 +50,16 @@ def adminLogoutProcess(request):
 def admin_home(request):
     return render(request,"admins/home.html")
 
+#HOMEPAGE CONFIGS
+
+class HomepageIndexView(ListView):
+    template_name = "admins/homepage_index.html"
+    model = Products
+    context_object_name = "products"
+
+    def get_queryset(self):
+        return Products.objects.filter(is_active=True)
+
 class ProductColorsListView(ListView):
     model=ProductColors
     template_name="admins/product_color_list.html"
@@ -90,6 +100,7 @@ class ProductColorsDelete(View):
         category=ProductColors.objects.get(id=_id)   
         category.delete()
         return HttpResponseRedirect(reverse("productcolor_list"))
+
 
 class ProductSizesListView(ListView):
     model=ProductSizes
@@ -132,6 +143,7 @@ class ProductSizesDelete(View):
         category.delete()
         return HttpResponseRedirect(reverse("productsize_list"))
 
+
 class BadgesListView(ListView):
     model=Badges
     template_name="admins/badge_list.html"
@@ -172,6 +184,7 @@ class BadgesDelete(View):
         category=Badges.objects.get(id=_id)   
         category.delete()
         return HttpResponseRedirect(reverse("badge_list"))
+
 
 class CategoriesListView(ListView):
     model=Categories
@@ -236,7 +249,6 @@ class SubCategoriesListView(ListView):
         context["orderby"]=self.request.GET.get("orderby","id")
         context["all_table_fields"]=SubCategories._meta.get_fields()
         return context
-
 
 class SubCategoriesCreate(SuccessMessageMixin,CreateView):
     model=SubCategories
@@ -355,9 +367,13 @@ class ProductView(View):
             sub_category=SubCategories.objects.filter(is_active=1,category_id=category.id)
             categories_list.append({"category":category,"sub_category":sub_category})
 
+        product_colors=ProductColors.objects.filter(is_active=1)
+        product_sizes=ProductSizes.objects.filter(is_active=1)
+        product_badges=Badges.objects.filter(is_active=1)
+
         merchant_users=MerchantUser.objects.filter(auth_user_id__is_active=True)
 
-        return render(request,"admins/product_create.html",{"categories":categories_list,"merchant_users":merchant_users})
+        return render(request,"admins/product_create.html",{"categories":categories_list,"merchant_users":merchant_users,"product_colors":product_colors,"product_sizes":product_sizes,"product_badges":product_badges})
 
     def post(self,request,*args,**kwargs):
         product_name=request.POST.get("product_name")
@@ -377,15 +393,29 @@ class ProductView(View):
         about_details_list=request.POST.getlist("about_details[]")
         product_tags=request.POST.get("product_tags")
         long_desc=request.POST.get("long_desc")
+        product_color=request.POST.get("product_color")
+        product_size=request.POST.get("product_size")
+        product_badge=request.POST.get("product_badge")
         is_active = request.POST.get("is_active")
 
         subcat_obj=SubCategories.objects.get(id=sub_category)
+        color_obj=ProductColors.objects.get(id=product_color)
+        size_obj=ProductSizes.objects.get(id=product_size)
+        badge_obj=Badges.objects.get(id=product_badge)
         merchant_user_obj=MerchantUser.objects.get(id=added_by_merchant)
         product=Products(product_name=product_name,in_stock_total=in_stock_total,url_slug=url_slug,
                          brand=brand,subcategories_id=subcat_obj,product_description=product_description,
                          product_max_price=product_max_price,product_discount_price=product_discount_price,
                          product_long_description=long_desc,added_by_merchant=merchant_user_obj,is_active=is_active)
         product.save()
+
+        product_obj=Products.objects.get(id=product.id)
+
+        product_varients=ProductVarient(product_id=product_obj,
+                                        color_id=color_obj,
+                                        size_id=size_obj,
+                                        badge_id=badge_obj)
+        product_varients.save()
 
         i=0
         for media_content in media_content_list:
@@ -415,7 +445,7 @@ class ProductView(View):
         
         product_transaction=ProductTransaction(product_id=product,transaction_type=1,transaction_product_count=in_stock_total,transaction_description="Intially Item Added in Stocks")
         product_transaction.save()
-        return HttpResponse("OK")
+        return HttpResponseRedirect(reverse("product_list"))
 
 @csrf_exempt
 def file_upload(request):
@@ -467,7 +497,18 @@ class ProductEdit(View):
             sub_category=SubCategories.objects.filter(is_active=1,category_id=category.id)
             categories_list.append({"category":category,"sub_category":sub_category})
 
-        return render(request,"admins/product_edit.html",{"categories":categories_list,"product":product,"product_details":product_details,"product_about":product_about,"product_tags":product_tags})
+        product_variant=ProductVarient.objects.filter(product_id=product_id).first()
+
+        product_colors=ProductColors.objects.filter(id=product_variant.color_id.id,is_active=1)
+        product_sizes=ProductSizes.objects.filter(id=product_variant.size_id.id,is_active=1)
+        product_badges=Badges.objects.filter(id=product_variant.badge_id.id,is_active=1)
+
+        merchant_users=MerchantUser.objects.filter(auth_user_id__is_active=True)
+
+        return render(request,"admins/product_edit.html",{"categories":categories_list,"product":product,
+                                                          "product_details":product_details,"product_about":product_about,"product_tags":product_tags,
+                                                          "product_colors":product_colors,"product_sizes":product_sizes,"product_badges":product_badges,
+                                                          "merchant_users":merchant_users})
 
     def post(self,request,*args,**kwargs):
         
@@ -486,7 +527,14 @@ class ProductEdit(View):
         about_ids=request.POST.getlist("about_id[]")
         product_tags=request.POST.get("product_tags")
         long_desc=request.POST.get("long_desc")
+        product_color=request.POST.get("product_color")
+        product_size=request.POST.get("product_size")
+        product_badge=request.POST.get("product_badge")
+        is_active=request.POST.get("is_active")
         subcat_obj=SubCategories.objects.get(id=sub_category)
+        color_obj=ProductColors.objects.get(id=product_color)
+        size_obj=ProductSizes.objects.get(id=product_size)
+        badge_obj=Badges.objects.get(id=product_badge)
 
         product_id=kwargs["product_id"]
         product=Products.objects.get(id=product_id)
@@ -499,7 +547,15 @@ class ProductEdit(View):
         product.product_discount_price=product_discount_price
         product.product_long_description=long_desc
         product.save()
-        
+
+        product_obj=Products.objects.get(id=product.id)
+
+        product_varients=ProductVarient(product_id=product_obj,
+                                        color_id=color_obj,
+                                        size_id=size_obj,
+                                        badge_id=badge_obj)
+        product_varients.save()
+
         j=0
         for title_title in title_title_list:
             detail_id=details_ids[j]
@@ -539,6 +595,12 @@ class ProductEdit(View):
             product_tag_obj.save()
         
         return HttpResponse("OK")
+class ProductDelete(View):
+    def get(self,request,*args,**kwargs):
+        _id=kwargs["pk"]
+        product=Products.objects.get(id=_id)   
+        product.delete()
+        return HttpResponseRedirect(reverse("product_list"))
 
 class ProductAddMedia(View):
     def get(self,request,*args,**kwargs):

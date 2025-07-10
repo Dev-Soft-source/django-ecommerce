@@ -47,11 +47,11 @@ Product Create
                             <label>Category</label>
                             <select name="sub_category" class="form-control">
                                 {% for category in categories %}
-                                    <optgroup  label={{ category.category.title }}>
-                                    {% for sub_cat in category.sub_category   %}
-                                        <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
-                                    {% endfor %}
-                                     </optgroup>
+                                    <optgroup  label="{{ category.category.title }}">
+                                        {% for sub_cat in category.sub_category %}
+                                            <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                                        {% endfor %}
+                                    </optgroup>
                                 {% endfor %}
                             </select>
                         </div>
@@ -98,6 +98,33 @@ Product Create
                     </div>
 
                     <div class="row">
+                        <div class="col-lg-6">
+                            <label>Product Color</label>
+                            <select class="form-control" name="product_color" >
+                            {% for color in product_colors %}
+                                <option value="{{ color.id }}">{{ color.color_name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Product Size</label>
+                            <select class="form-control" name="product_size">
+                            {% for size in product_sizes %}
+                                <option value="{{ size.id }}">{{ size.size_name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Badges</label>
+                            <select class="form-control" name="product_badge" placeholder="New">
+                            {% for badge in product_badges %}
+                                <option value="{{ badge.id }}">{{ badge.title }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
                         <div class="col-lg-6">
                             <label>Is Active</label>
                             <select class="form-control" name="is_active">
@@ -197,7 +224,7 @@ Product Create
                     <hr>
                     <div class="row">
                         <div class="col-lg-12">
-                                <input type="text" name="product_tags"  data-role="tagsinput"  />
+                            <input type="text" name="product_tags"  data-role="tagsinput"  />
                         </div>
                     </div>
                     <br>

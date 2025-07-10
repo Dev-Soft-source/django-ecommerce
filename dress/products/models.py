@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from dashboards.models import CustomerUser, MerchantUser
+from dashboards.models import CustomerUser, MerchantUser, ProductColors, ProductSizes, Badges
 
 # Create your models here.
 
@@ -42,6 +42,14 @@ class Products(models.Model):
     added_by_merchant=models.ForeignKey(MerchantUser,on_delete=models.CASCADE)
     in_stock_total=models.IntegerField(default=1)
     is_active=models.IntegerField()
+
+class ProductVarient(models.Model):
+    id=models.AutoField(primary_key=True)
+    product_id=models.ForeignKey(Products,on_delete=models.CASCADE)
+    color_id=models.ForeignKey(ProductColors,on_delete=models.CASCADE)
+    size_id=models.ForeignKey(ProductSizes,on_delete=models.CASCADE)
+    badge_id=models.ForeignKey(Badges,on_delete=models.CASCADE)
+    created_at=models.DateTimeField(auto_now_add=True)
 
 class ProductMedia(models.Model):
     id=models.AutoField(primary_key=True)
@@ -110,11 +118,6 @@ class ProductReviewVoting(models.Model):
     user_id_voting=models.ForeignKey(CustomerUser,on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now_add=True)
     is_active=models.IntegerField(default=1)
-
-class ProductVarient(models.Model):
-    id=models.AutoField(primary_key=True)
-    title=models.CharField(max_length=255)
-    created_at=models.DateTimeField(auto_now_add=True)
 
 class ProductVarientItems(models.Model):
     id=models.AutoField(primary_key=True)

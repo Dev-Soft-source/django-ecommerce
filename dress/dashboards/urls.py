@@ -11,6 +11,9 @@ urlpatterns = [
     # PAGE FOR ADMIN
     path('admin_home/', views.admin_home,name="admin_home"),
 
+    #HOMEPAGE CONFIGS
+    path('homepage_index', views.HomepageIndexView.as_view(), name="homepage_index"),
+
     #PRODUCT COLORS
     path('productcolor_list/', views.ProductColorsListView.as_view(),name="productcolor_list"),
     path('productcolor_create/', views.ProductColorsCreate.as_view(),name="productcolor_create"),
@@ -48,6 +51,7 @@ urlpatterns = [
     #Products
     path('product_create/', views.ProductView.as_view(),name="product_view"),
     path('product_list/', views.ProductListView.as_view(),name="product_list"),
+    path('product_delete/<str:pk>/', views.ProductDelete.as_view(),name="product_delete"),
     path('product_edit/<str:product_id>/', views.ProductEdit.as_view(),name="product_edit"),
     path('product_add_media/<str:product_id>/', views.ProductAddMedia.as_view(),name="product_add_media"),
     path('product_edit_media/<str:product_id>/', views.ProductEditMedia.as_view(),name="product_edit_media"),

@@ -9,7 +9,17 @@
       </div>
       <ul class="sidebar-menu">
         <li class="menu-header">Dashboard</li>
+        <h6>Homepage Configure</h6>
+        {% comment %} HOMEPAGE MENU {% endcomment %}
+        {% url 'homepage_index' as homepage_index %}
+        <li class="dropdown {% if request.path == homepage_index %} active {% endif %}">
+          <a href="#" class="nav-link has-dropdown"><i class="fas fa-home"></i><span>Homepage</span></a>
+          <ul class="dropdown-menu">
+            <li class='{% if request.path == homepage_index %} active {% endif %}'><a class="nav-link" href="{% url 'homepage_index' %}">Homepage Configuration</a></li>
+          </ul>
+        </li>
 
+        <h6>Admin Management</h6>
         {% comment %} PRODUCT SIZE MENU {% endcomment %}
         {% url 'productsize_list' as productsize_list %}
         {% url 'productsize_create' as productsize_create %}
