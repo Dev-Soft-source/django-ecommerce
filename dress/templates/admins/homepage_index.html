@@ -22,98 +22,181 @@ Homepage
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
-            <form id="myform">
+            <form id="myform" enctype="multipart/form-data" action="{% url 'homepage_index' %}" method="post">
                 {% csrf_token %}
                 <div class="card-body">
                     <br>
                     <h5>Homepage Interface(1,2,3,~)</h5>
                     <hr style="border: 1px solid #8b3987;">
-                    <div class="interface_media_div">
-                        <div class="interface_media_div_row first_media">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <label>small Title</label>
-                                    <input class="form-control" name="interface_small_title" placeholder="summer collection" />
+                    {% if interface_configures %}
+                        {% for configure in interface_configures %}
+                        <div class="interface_media_div">
+                            <div class="interface_media_div_row first_media">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label>small Title</label>
+                                        <input class="form-control" name="interface_small_title[]" value="{{ configure.small_title }}" placeholder="summer collection" />
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Title</label>
+                                        <input class="form-control" name="interface_title[]" id="interface_title" value="{{ configure.title }}" placeholder="Fall - Winter Collection ..."  />
+                                    </div>                            
                                 </div>
-                                <div class="col-lg-6">
-                                    <label>Title</label>
-                                    <input class="form-control" name="interface_title" id="interface_title" placeholder="Fall - Winter Collection ..."  />
-                                </div>                            
-                            </div>
-                            <div class="row"> 
-                                <div class="col-lg-12">
-                                    <label>Product Description</label>
-                                    <textarea class="form-control" name="Product_description" id="Product_description"></textarea>
+                                <div class="row"> 
+                                    <div class="col-lg-12">
+                                        <label>Product Description</label>
+                                        <textarea class="form-control" name="interface_description[]" id="interface_description">{{ configure.description }}    </textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <label>Media Type</label>
-                                    <select name="media_type[]" class="form-control media_type">
-                                        <option value="1">Image</option>
-                                        <option value="2">Video</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label>Media Type</label>
+                                        <select name="media_type[]" class="form-control media_type">
+                                            <option value="1" {% if configure.media_type == 1 %}selected{% endif %}>Image</option>
+                                            <option value="2" {% if configure.media_type == 2 %}selected{% endif %}>Video</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Select Media</label>
+                                        <input type="file" name="configure_media_content[]" value="{{ configure.media_content }}" class="form-control select_media" />
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <label>Preview</label>
+                                        <br>
+                                        <img style="width:70%;display:none" class="img_preview">
+                                        <br>
+                                        <video style="width:70%;display:none" class="video_preview" controls>
+                                    </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <label>Select Media</label>
-                                    <input type="file" name="configure_media_content[]" class="form-control select_media" />
+                                <hr style="border: 1px solid #62a89d;">
+                            </div>                        
+                        </div>                    
+                        <br>
+                        {% endfor %}
+                    {% else %}
+                        <div class="interface_media_div">
+                            <div class="interface_media_div_row first_media">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label>small Title</label>
+                                        <input class="form-control" name="interface_small_title[]" placeholder="summer collection" />
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Title</label>
+                                        <input class="form-control" name="interface_title[]" id="interface_title" placeholder="Fall - Winter Collection ..."  />
+                                    </div>                            
                                 </div>
-                                <div class="col-lg-4">
-                                    <label>Preview</label>
-                                    <br>
-                                    <img style="width:70%;display:none" class="img_preview">
-                                    <br>
-                                    <video style="width:70%;display:none" class="video_preview" controls>
+                                <div class="row"> 
+                                    <div class="col-lg-12">
+                                        <label>Product Description</label>
+                                        <textarea class="form-control" name="interface_description[]"> </textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <hr style="border: 1px solid #62a89d;">
-                        </div>                        
-                    </div>                    
-                    <br>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label>Media Type</label>
+                                        <select name="media_type[]" class="form-control media_type">
+                                            <option value="1">Image</option>
+                                            <option value="2">Video</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Select Media</label>
+                                        <input type="file" name="configure_media_content[]" class="form-control select_media" />
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <label>Preview</label>
+                                        <br>
+                                        <img style="width:70%;display:none" class="img_preview">
+                                        <br>
+                                        <video style="width:70%;display:none" class="video_preview" controls>
+                                    </div>
+                                </div>
+                                <hr style="border: 1px solid #62a89d;">
+                            </div>                        
+                        </div>                    
+                        <br>
+                    {% endif %}
                     <div class="row">
                         <div class="col-lg-6">
-                            <button class="btn btn-success btn-block add_interface_media" type="button">ADD IMAGE</button>
+                            <button class="btn btn-success btn-block add_interface_media" type="button">ADD Interface</button>
                         </div>
                         <div class="col-lg-6">
-                            <button class="btn btn-danger btn-block remove_interface_media" type="button">REMOVE IMAGE</button>
+                            <button class="btn btn-danger btn-block remove_interface_media" type="button">REMOVE Interface</button>
                         </div>
                     </div>
 
                     <br> 
                     <h5>Collection media(3)</h5>
                     <hr style="border: 1px solid #8b3987;">
-                    <div class="collection_media_div">
-                        <div class="collection_media_div_row second_media">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <label>Collection Title</label>
-                                    <input class="form-control" name="collection_title" id="collection_title" placeholder="Clothing Collections 2030"  />
-                                </div>                            
+                    {% if collection_configures %}
+                        {% for collection in collection_configures %}
+                            <div class="collection_media_div"> 
+                                <div class="collection_media_div_row">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <label>Collection Title</label>
+                                            <input class="form-control" name="collection_title[]" value="{{ collection.title }}" placeholder="Clothing Collections 2030"  />
+                                        </div>                            
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <label>Media Type</label>
+                                            <select name="collection_media_type[]" class="form-control media_type">
+                                                <option value="1" {% if collection.media_type == 1 %}selected{% endif %}>Image</option>
+                                                <option value="2" {% if collection.media_type == 2 %}selected{% endif %}>Video</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label>Select Media</label>
+                                            <input type="file" name="collection_media_content[]" value="{{ collection.media_content }}" class="form-control select_collection_media" />
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <label>Preview</label>
+                                            <br>
+                                            <img style="width:70%;display:none" class="img_preview">
+                                            <br>
+                                            <video style="width:70%;display:none" class="video_preview" controls>
+                                        </div>
+                                    </div>
+                                    <hr style="border: 1px solid #62a89d;">
+                                </div>
+                            </div>                            
+                        {% endfor %}
+                    {% else %}
+                        <div class="collection_media_div">
+                            <div class="collection_media_div_row second_media">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <label>Collection Title</label>
+                                        <input class="form-control" name="collection_title[]" placeholder="Clothing Collections 2030"  />
+                                    </div>                            
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label>Media Type</label>
+                                        <select name="collection_media_type[]" class="form-control media_type">
+                                            <option value="1">Image</option>
+                                            <option value="2">Video</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Select Media</label>
+                                        <input type="file" name="collection_media_content[]" class="form-control select_collection_media" />
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <label>Preview</label>
+                                        <br>
+                                        <img style="width:70%;display:none" class="img_preview">
+                                        <br>
+                                        <video style="width:70%;display:none" class="video_preview" controls>
+                                    </div>
+                                </div>
+                                <hr style="border: 1px solid #62a89d;">
                             </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <label>Media Type</label>
-                                    <select name="media_type[]" class="form-control media_type">
-                                        <option value="1">Image</option>
-                                        <option value="2">Video</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-4">
-                                    <label>Select Media</label>
-                                    <input type="file" name="collection_content[]" class="form-control select_collection_media" />
-                                </div>
-                                <div class="col-lg-4">
-                                    <label>Preview</label>
-                                    <br>
-                                    <img style="width:70%;display:none" class="img_preview">
-                                    <br>
-                                    <video style="width:70%;display:none" class="video_preview" controls>
-                                </div>
-                            </div>
-                            <hr style="border: 1px solid #62a89d;">
-                        </div>
-                    </div>                    
-                    <br>
+                        </div>                    
+                        <br>
+                    {% endif %}                    
                     <div class="row">
                         <div class="col-lg-6">
                             <button class="btn btn-success btn-block add_collection_media" type="button">ADD COLLECTION IMAGE</button>
@@ -126,117 +209,183 @@ Homepage
                     <br> 
                     <h5>Best Sellers(4,8,~)</h5>
                     <hr style="border: 1px solid #8b3987;">
-                    <div class="best_div">
-                        <div class="row best_div_row third_best">
-                            <div class="col-lg-6">
-                                <label>Category</label>
-                                <select name="best_category[]" class="form-control select_best_category">
-                                    {% for category in categories %}
-                                        <optgroup  label="{{ category.category.title }}">
-                                            {% for sub_cat in category.sub_category %}
-                                                <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+
+                    {% if best_products %}
+                        {% for best_product in best_products %}
+                            <div class="best_div">
+                                <div class="row best_div_row third_best">
+                                    <div class="col-lg-6">
+                                        <label>Product</label>
+                                        <select name="best_product[]" class="form-control select_best_product">
+                                            {% for product in products %}
+                                                <option value="{{ product.id }}" {% if product.id == best_product.best_product.id %}selected{% endif %}>{{ product.product_name }}</option>
                                             {% endfor %}
-                                        </optgroup>
-                                    {% endfor %}
-                                </select>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="best_div">
+                            <div class="row best_div_row third_best">
+                                <div class="col-lg-6">
+                                    <label>Product</label>
+                                    <select name="best_product[]" class="form-control select_best_product">
+                                        {% for product in products %}
+                                            <option value="{{ product.id }}">{{ product.product_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
+                    {% endif %}   
                     <br>
                     <div class="row">
                         <div class="col-lg-6">
-                            <button class="btn btn-success btn-block add_best" type="button">ADD Best Seller Category</button>
+                            <button class="btn btn-success btn-block add_best" type="button">ADD Best Seller Product</button>
                         </div>
                         <div class="col-lg-6">
-                            <button class="btn btn-danger btn-block remove_best" type="button">REMOVE Best Seller Category</button>
+                            <button class="btn btn-danger btn-block remove_best" type="button">REMOVE Best Seller Product</button>
                         </div>
                     </div>
 
                     <br> 
                     <h5>New Arrivals(4,8,~)</h5>
                     <hr style="border: 1px solid #8b3987;">
-                    <div class="new_div">
-                        <div class="row new_div_row first_new">
-                            <div class="col-lg-6">
-                                <label>Category</label>
-                                <select name="new_category[]" class="form-control select_new_category">
-                                    {% for category in categories %}
-                                        <optgroup  label="{{ category.category.title }}">
-                                            {% for sub_cat in category.sub_category %}
-                                                <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                    {% if new_products %}
+                        {% for new_product in new_products %}
+                            <div class="new_div">
+                                <div class="row new_div_row first_new">
+                                    <div class="col-lg-6">
+                                        <label>Product</label>
+                                        <select name="new_product[]" class="form-control select_new_product">
+                                            {% for product in products %}
+                                                <option value="{{ product.id }}" {% if product.id == new_product.id %}selected{% endif %}>{{ product.product_name }}</option>
                                             {% endfor %}
-                                        </optgroup>
-                                    {% endfor %}
-                                </select>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="new_div">
+                            <div class="row new_div_row first_new">
+                                <div class="col-lg-6">
+                                    <label>Product</label>
+                                    <select name="new_product[]" class="form-control select_new_product">
+                                        {% for product in products %}
+                                            <option value="{{ product.id }}">{{ product.product_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>                    
+                    {% endif %}                                        
                     <br>
                     <div class="row">
                         <div class="col-lg-6">
-                            <button class="btn btn-success btn-block add_new" type="button">ADD New Arrival Category</button>
+                            <button class="btn btn-success btn-block add_new" type="button">ADD New Arrival Product</button>
                         </div>
                         <div class="col-lg-6">
-                            <button class="btn btn-danger btn-block remove_new" type="button">REMOVE New Arrival Category</button>
+                            <button class="btn btn-danger btn-block remove_new" type="button">REMOVE New Arrival Product</button>
                         </div>
                     </div>
 
                     <br> 
                     <h5>Hot Sales(4,8,~)</h5>
                     <hr style="border: 1px solid #8b3987;">
-                    <div class="hot_div">
-                        <div class="row hot_div_row first_hot">
-                            <div class="col-lg-6">
-                                <label>Category</label>
-                                <select name="hot_category[]" class="form-control select_hot_category">
-                                    {% for category in categories %}
-                                        <optgroup  label="{{ category.category.title }}">
-                                            {% for sub_cat in category.sub_category %}
-                                                <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                    {% if hot_products %}
+                        {% for hot_product in hot_products %}
+                            <div class="hot_div">
+                                <div class="row hot_div_row first_hot">
+                                    <div class="col-lg-6">
+                                        <label>Product</label>
+                                        <select name="hot_product[]" class="form-control select_hot_product">
+                                            {% for product in products %}
+                                                <option value="{{ product.id }}" {% if product.id == hot_product.id %}selected{% endif %}>{{ product.product_name }}</option>
                                             {% endfor %}
-                                        </optgroup>
-                                    {% endfor %}
-                                </select>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="hot_div">
+                            <div class="row hot_div_row first_hot">
+                                <div class="col-lg-6">
+                                    <label>Product</label>
+                                    <select name="hot_product[]" class="form-control select_hot_product">
+                                        {% for product in products %}
+                                            <option value="{{ product.id }}">{{ product.product_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>                    
+                    {% endif %}                                        
                     <br>
                     <div class="row">
                         <div class="col-lg-6">
-                            <button class="btn btn-success btn-block add_hot" type="button">ADD Hot Sales Category</button>
+                            <button class="btn btn-success btn-block add_hot" type="button">ADD Hot Sales Product</button>
                         </div>
                         <div class="col-lg-6">
-                            <button class="btn btn-danger btn-block remove_hot" type="button">REMOVE Hot Sales Category</button>
+                            <button class="btn btn-danger btn-block remove_hot" type="button">REMOVE Hot Sales Product</button>
                         </div>
                     </div>
 
                     <br> 
-                    <h5>Instagram</h5>
+                    <h5>Instagram(3, 6, ...)</h5>
                     <hr style="border: 1px solid #8b3987;">
-                    <div class="row"> 
-                        <div class="col-lg-12">
-                            <label>Instagram Description</label>
-                            <textarea class="form-control" name="instagram_description" id="instagram_desc"></textarea>
+                    {% if instagram_products %}
+                        {% for instagram_product in instagram_products %}
+                            <div class="instagram_div">
+                                <div class="row instagram_media_div_row first_instagram">
+                                <div class="col-lg-3">
+                                        <label>Media Type</label>
+                                        <select name="instagram_media_type[]" class="form-control media_type">
+                                            <option value="1" {% if instagram_product.media_type == 1 %}selected{% endif %}>Image</option>
+                                            <option value="2" {% if instagram_product.media_type == 2 %}selected{% endif %}>Video</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Select Media</label>
+                                        <input type="file" name="instagram_media_content[]" value="{{ instagram_product.media_content }}" class="form-control instagram_select_media" />
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <label>Preview</label>
+                                        <br>
+                                        <img style="width:70%;display:none" class="img_preview">
+                                        <br>
+                                        <video style="width:70%;display:none" class="video_preview" controls>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="instagram_div">
+                            <div class="row instagram_media_div_row first_instagram">
+                            <div class="col-lg-3">
+                                    <label>Media Type</label>
+                                    <select name="instagram_media_type[]" class="form-control media_type">
+                                        <option value="1">Image</option>
+                                        <option value="2">Video</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label>Select Media</label>
+                                    <input type="file" name="instagram_media_content[]" class="form-control instagram_select_media" />
+                                </div>
+                                <div class="col-lg-5">
+                                    <label>Preview</label>
+                                    <br>
+                                    <img style="width:70%;display:none" class="img_preview">
+                                    <br>
+                                    <video style="width:70%;display:none" class="video_preview" controls>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="instagram_div">
-
-                    </div>
-                    <div class="row instagram_div_row first_instagram">
-                        <div class="col-lg-6">
-                            <label>Category</label>
-                            <select name="instagram_category[]" class="form-control select_instagram_category">
-                                {% for category in categories %}
-                                    <optgroup  label="{{ category.category.title }}">
-                                        {% for sub_cat in category.sub_category %}
-                                            <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
-                                        {% endfor %}
-                                    </optgroup>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
+                    {% endif %}
+                    
                     <br>
                     <div class="row">
                         <div class="col-lg-6">
@@ -250,7 +399,7 @@ Homepage
                     <br> 
                     <hr>
                     <div class="row">
-                        <button type="button" class="btn btn-primary btn-block submit_btn">Configuration</button>
+                        <button type="submit" class="btn btn-primary btn-block submit_btn">Configuration</button>
                     </div>                    
                 </div>
             </form>
@@ -339,6 +488,21 @@ Homepage
         }
     });
 
+    $(".add_instagram").click(function(){
+        var media_row=$(".first_instagram").clone();
+        media_row.removeClass("first_instagram");
+        media_row.replaceAll("src","")
+        media_row.find(".instagram_select_media").val("");
+        media_row.find(".img_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+        media_row.find(".video_preview").attr("src","").css({"border":"none"}).css({"border-radius":"0px"}).hide();
+        $(".instagram_div").append(media_row);
+    });
+    $(".remove_instagram").click(function(){
+        if($(".instagram_div").find(".instagram_media_div_row").length>1){
+            $(".instagram_div").children().last().remove();
+        }
+    });
+
     $(".add_collection_media").click(function(){
         var media_row=$(".second_media").clone();
         media_row.removeClass("second_media");
@@ -358,7 +522,7 @@ Homepage
         var media_row=$(".third_best").clone();
         media_row.removeClass("third_best");
         media_row.replaceAll("src","")
-        media_row.find(".select_best_category").val("");
+        media_row.find(".select_best_product").val("");
         $(".best_div").append(media_row);
     });
     $(".remove_best").click(function(){
@@ -371,7 +535,7 @@ Homepage
         var media_row=$(".first_new").clone();
         media_row.removeClass("first_new");
         media_row.replaceAll("src","")
-        media_row.find(".select_new_category").val("");
+        media_row.find(".select_new_product").val("");
         $(".new_div").append(media_row);
     });
     $(".remove_new").click(function(){
@@ -384,7 +548,7 @@ Homepage
         var media_row=$(".first_hot").clone();
         media_row.removeClass("first_hot");
         media_row.replaceAll("src","")
-        media_row.find(".select_hot_category").val("");
+        media_row.find(".select_hot_product").val("");
         $(".hot_div").append(media_row);
     });
     $(".remove_hot").click(function(){
@@ -393,18 +557,7 @@ Homepage
         }
     });
 
-    $(".add_instagram").click(function(){
-        var media_row=$(".first_instagram").clone();
-        media_row.removeClass("first_instagram");
-        media_row.replaceAll("src","")
-        media_row.find(".select_instagram_category").val("");
-        $(".instagram_div").append(media_row);
-    });
-    $(".remove_instagram").click(function(){
-        if($(".instagram_div").find(".instagram_div_row").length>1){
-            $(".instagram_div").children().last().remove();
-        }
-    });
+    
 
     $(document).on("change",".select_media",function(){
         var media_type=$(this).parents(".interface_media_div_row").find(".media_type").val();
@@ -417,6 +570,13 @@ Homepage
         var media_type=$(this).parents(".collection_media_div_row").find(".media_type").val();
         var img_preview=$(this).parents(".collection_media_div_row").find(".img_preview");
         var vid_preview=$(this).parents(".collection_media_div_row").find(".video_preview");
+        showPreviewMedia(this,media_type,img_preview,vid_preview);
+    });
+
+    $(document).on("change",".instagram_select_media",function(){
+        var media_type=$(this).parents(".instagram_media_div_row").find(".media_type").val();
+        var img_preview=$(this).parents(".instagram_media_div_row").find(".img_preview");
+        var vid_preview=$(this).parents(".instagram_media_div_row").find(".video_preview");
         showPreviewMedia(this,media_type,img_preview,vid_preview);
     });
 
@@ -443,34 +603,6 @@ Homepage
             reader.readAsDataURL(input.files[0]);
         }
     }
-
-
-    $(".submit_btn").click(function(){
-        var form=new FormData($("#myform")[0]);
-        form.append("long_desc",tinyMCE.activeEditor.getContent());
-
-        //AJAX CODE
-        var xhr=new XMLHttpRequest();
-        xhr.onreadystatechange=function(){
-            if(xhr.status==200){
-                console.log(xhr.responseText);
-            }
-        }
-        xhr.open("POST","{% url 'product_view' %}",true);
-        $("#progressbar").show();
-
-        //UPDATING PROGRESS BAR
-        xhr.upload.addEventListener("progress",function(ev){
-            if(ev.lengthComputable){
-                var percentage=(ev.loaded/ev.total*100|0);
-                $("#progressbar").css({"width":""+percentage+"%"}).text("Uploading .."+percentage+"%");
-                console.log(percentage);
-            }
-        });
-
-        xhr.send(form);
-    })
-
 </script>
 <script src="//bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 {% endblock custom_js %}

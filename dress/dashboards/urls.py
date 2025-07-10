@@ -12,7 +12,7 @@ urlpatterns = [
     path('admin_home/', views.admin_home,name="admin_home"),
 
     #HOMEPAGE CONFIGS
-    path('homepage_index', views.HomepageIndexView.as_view(), name="homepage_index"),
+    path('homepage_index/', views.HomepageIndexView.as_view(), name="homepage_index"),
 
     #PRODUCT COLORS
     path('productcolor_list/', views.ProductColorsListView.as_view(),name="productcolor_list"),

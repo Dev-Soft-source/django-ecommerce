@@ -1,10 +1,11 @@
+import re
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, View
 from products.models import Categories, SubCategories, ProductAbout, ProductDetails, ProductMedia, ProductTransaction, ProductTags, Products, ProductVarient
-from .models import CustomUser, MerchantUser, StaffUser, CustomerUser, ProductColors, ProductSizes, Badges
+from .models import CustomUser, MerchantUser, StaffUser, CustomerUser, ProductColors, ProductSizes, Badges, InterfaceConfigures, InterfaceCollections, InterfaceBests, InterfaceHots, InterfaceNews, InterfaceInstagram
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.files.storage import FileSystemStorage
 from django.contrib.messages.views import messages
@@ -53,12 +54,114 @@ def admin_home(request):
 #HOMEPAGE CONFIGS
 
 class HomepageIndexView(ListView):
-    template_name = "admins/homepage_index.html"
-    model = Products
-    context_object_name = "products"
+    def get(self, request, *args, **kwargs):
+        products=Products.objects.filter(is_active=1)
+        interface_configures=InterfaceConfigures.objects.all()
+        collection_configures=InterfaceCollections.objects.all()
+        best_products=InterfaceBests.objects.all()
+        new_products=InterfaceNews.objects.all()
+        hot_products=InterfaceHots.objects.all()
+        instagram_products=InterfaceInstagram.objects.all()
+        return render(request,"admins/homepage_index.html",{"products":products,"interface_configures":interface_configures,"collection_configures":collection_configures,"best_products":best_products,"new_products":new_products,"hot_products":hot_products,"instagram_products":instagram_products})
 
-    def get_queryset(self):
-        return Products.objects.filter(is_active=True)
+    def post(self,request,*args,**kwargs):
+        interface_small_title_list=request.POST.getlist("interface_small_title[]")
+        interface_title_list=request.POST.getlist("interface_title[]")
+        interface_description_list=request.POST.getlist("interface_description[]")
+        media_type_list=request.POST.getlist("media_type[]")
+        configure_media_content_list=request.FILES.getlist("configure_media_content[]")
+
+        collection_title_list=request.POST.getlist("collection_title[]")
+        collection_media_type_list=request.POST.getlist("collection_media_type[]")
+        collection_content_list=request.FILES.getlist("collection_media_content[]")
+
+        best_product_list=request.POST.getlist("best_product[]")
+        new_product_list = request.POST.getlist("new_product[]")
+        hot_product_list = request.POST.getlist("hot_product[]")
+        instagram_media_type_list = request.POST.getlist("instagram_media_type[]")
+        instagram_media_content_list = request.FILES.getlist("instagram_media_content[]")       
+
+        i=0
+        for media_content in configure_media_content_list:
+            fs = FileSystemStorage(location='static/img/hero/', base_url='/static/img/hero/')
+            filename=fs.save(media_content.name, media_content)
+            media_url=fs.url(filename)
+            interface_configure=InterfaceConfigures(
+                title=interface_title_list[i],
+                small_title=interface_small_title_list[i],
+                description=interface_description_list[i],
+                media_type=media_type_list[i],
+                media_content=media_url
+            )
+            interface_configure.save()
+            i=i+1
+
+        j=0
+        for media_content in collection_content_list:
+            fs = FileSystemStorage(location='static/img/banner/', base_url='/static/img/banner/')
+            filename=fs.save(media_content.name, media_content)
+            media_url=fs.url(filename)
+            collection_configure=InterfaceCollections(
+                title=collection_title_list[j],
+                media_type=collection_media_type_list[j],
+                media_content=media_url
+            )
+            collection_configure.save()
+            j=j+1
+
+        k = 0
+        for product_id in best_product_list:
+            try:
+                product = Products.objects.get(id=product_id)  # Get the Products instance
+                best_configure = InterfaceBests(
+                    best_product=product  # Assign the instance, not just the ID
+                )
+                best_configure.save()
+                k = k + 1
+            except Products.DoesNotExist:
+                print(f"Product with ID {product_id} not found")
+                continue
+
+        l = 0
+        for product_id in new_product_list:
+            try:
+                product = Products.objects.get(id=product_id)
+                new_configure = InterfaceNews(
+                    new_product=product
+                )
+                new_configure.save()
+                l = l + 1
+            except Products.DoesNotExist:
+                print(f"Product with ID {product_id} not found")
+                continue
+
+        m = 0
+        for product_id in hot_product_list:
+            try:
+                product = Products.objects.get(id=product_id)
+                hot_configure = InterfaceHots(
+                    hot_product=product
+                )
+                hot_configure.save()
+                m = m + 1
+            except Products.DoesNotExist:
+                print(f"Product with ID {product_id} not found")
+                continue
+
+        n=0
+        for media_content in instagram_media_content_list:
+            fs = FileSystemStorage(location='static/img/instagram/', base_url='/static/img/instagram/')
+            filename=fs.save(media_content.name, media_content)
+            media_url=fs.url(filename)
+            instagram_configure=InterfaceInstagram(
+                media_type=instagram_media_type_list[n],
+                media_content=media_url
+            )
+            instagram_configure.save()
+            n=n+1
+
+        return HttpResponseRedirect(reverse("homepage_index"))
+
 
 class ProductColorsListView(ListView):
     model=ProductColors

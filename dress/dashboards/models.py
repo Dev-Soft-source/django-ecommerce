@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils import timezone
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -87,6 +88,36 @@ class ProductSizes(models.Model):
     def __str__(self):
         return self.size_name
 
+class InterfaceConfigures(models.Model):
+    small_title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    media_type = models.IntegerField()
+    media_content = models.FileField(upload_to='interface_media/')
+    created_at=models.DateTimeField(default=timezone.now)
+
+class InterfaceCollections(models.Model):
+    title = models.CharField(max_length=100)
+    media_type = models.IntegerField()
+    media_content = models.FileField(upload_to='interface_media/')
+    created_at=models.DateTimeField(default=timezone.now)
+
+class InterfaceBests(models.Model):
+    best_product = models.ForeignKey('products.Products', on_delete=models.CASCADE, related_name='best_product_configs', null=True, blank=True)
+    created_at=models.DateTimeField(default=timezone.now)
+
+class InterfaceNews(models.Model):
+    new_product = models.ForeignKey('products.Products', on_delete=models.CASCADE, related_name='new_product_configs', null=True, blank=True)
+    created_at=models.DateTimeField(default=timezone.now)
+
+class InterfaceHots(models.Model):
+    hot_product = models.ForeignKey('products.Products', on_delete=models.CASCADE, related_name='hot_product_configs', null=True, blank=True)
+    created_at=models.DateTimeField(default=timezone.now)
+
+class InterfaceInstagram(models.Model):
+    media_type = models.IntegerField()
+    media_content = models.FileField(upload_to='interface_media/')
+    created_at=models.DateTimeField(default=timezone.now)
 
 @receiver(post_save,sender=CustomUser)
 def create_user_profile(sender,instance,created,**kwargs):

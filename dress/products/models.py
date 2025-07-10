@@ -69,7 +69,6 @@ class ProductTransaction(models.Model):
     transaction_description=models.CharField(max_length=255)
     created_at=models.DateTimeField(auto_now_add=True)
 
-
 class ProductDetails(models.Model):
     id=models.AutoField(primary_key=True)
     product_id=models.ForeignKey(Products,on_delete=models.CASCADE)
